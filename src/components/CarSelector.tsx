@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Select, message } from 'antd';
+import { Select, App as AntdApp } from 'antd';
 import { useWorkshopStore } from '../stores/workshopStore';
 import type { CarModel } from '../types';
 
 export const CarSelector = () => {
+  const { message } = AntdApp.useApp();
   const { cars, selectedCar, setSelectedCar, loadCars } = useWorkshopStore();
   const [loading, setLoading] = useState(false);
 

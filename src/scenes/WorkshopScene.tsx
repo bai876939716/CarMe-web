@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { useWorkshopStore } from '../stores/workshopStore';
 import { CarModel3D } from '../components/CarModel3D';
 
@@ -8,7 +8,7 @@ export const WorkshopScene = () => {
 
   return (
     <Canvas
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: '100%', height: '100%', background: '#050508' }}
       gl={{ antialias: true }}
     >
       {/* 相机 */}
@@ -19,9 +19,6 @@ export const WorkshopScene = () => {
 
       {/* 方向光 */}
       <directionalLight position={[10, 10, 5]} intensity={1} />
-
-      {/* 环境 */}
-      <Environment preset="sunset" />
 
       {/* 控制器 */}
       <OrbitControls

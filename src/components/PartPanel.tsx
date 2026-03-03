@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Card, Button, Space, message } from 'antd';
+import { Card, Button, Space, App as AntdApp } from 'antd';
 import { useWorkshopStore } from '../stores/workshopStore';
 import type { Part } from '../types';
 
 export const PartPanel = () => {
+  const { message } = AntdApp.useApp();
   const {
     wheels,
     colors,
