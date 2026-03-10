@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { message } from 'antd';
+import { App as AntdApp } from 'antd';
 import { useWorkshopStore } from '../stores/workshopStore';
 import { WorkshopScene } from '../scenes/WorkshopScene';
 import type { CarModel, Part } from '../types';
@@ -17,6 +17,7 @@ const getCarGradient = (car: CarModel, idx: number) =>
 
 // ---- Car Selection Screen ----
 const CarSelectScreen = () => {
+  const { message } = AntdApp.useApp();
   const { cars, selectedCar, setSelectedCar, loadCars } = useWorkshopStore();
   const [loading, setLoading] = useState(false);
   const [hoveredCar, setHoveredCar] = useState<number | null>(null);
@@ -193,6 +194,7 @@ const CarSelectScreen = () => {
 
 // ---- Workshop Sidebar ----
 const WorkshopSidebar = () => {
+  const { message } = AntdApp.useApp();
   const {
     wheels,
     colors,
