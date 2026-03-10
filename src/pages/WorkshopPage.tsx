@@ -233,12 +233,15 @@ const WorkshopSidebar = () => {
     <div
       style={{
         width: 288,
-        background: '#08080f',
-        borderRight: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(8, 8, 15, 0.65)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRight: '1px solid rgba(255,255,255,0.08)',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
         flexShrink: 0,
+        zIndex: 10,
       }}
     >
       {/* Tab Bar */}

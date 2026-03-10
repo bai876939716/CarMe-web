@@ -14,10 +14,16 @@ function App() {
         algorithm: theme.darkAlgorithm,
         token: {
           colorPrimary: '#00d4ff',
-          colorBgContainer: '#0d0d1a',
-          colorBgElevated: '#12121f',
+          colorBgContainer: 'rgba(13, 13, 26, 0.6)', // 毛玻璃背景
+          colorBgElevated: 'rgba(18, 18, 31, 0.8)',
           borderRadius: 10,
           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        },
+        components: {
+          Layout: {
+            bodyBg: '#050508',
+            headerBg: 'rgba(5, 5, 8, 0.8)',
+          },
         },
       }}
     >
