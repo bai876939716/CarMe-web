@@ -9,29 +9,31 @@ export const WorkshopScene = () => {
 
   return (
     <Canvas
-      style={{ width: '100%', height: '100%', background: '#1e1e24' }}
+      // 3D 场景改成偏「摄影棚」的浅灰蓝背景，整体更亮
+      style={{ width: '100%', height: '100%', background: '#dfe3f0' }}
       gl={{ antialias: true }}
     >
       {/* 相机 */}
       <PerspectiveCamera makeDefault position={[0, 2, 5]} fov={50} />
 
-      {/* 环境光 - 调亮 */}
-      <ambientLight intensity={0.8} />
+      {/* 环境光 - 提高整体明度 */}
+      <ambientLight intensity={1.1} />
 
-      {/* 半球光 - 模拟天空和地面的反射环境光，替代 Environment 贴图 */}
-      <hemisphereLight intensity={0.6} color="#ffffff" groundColor="#444444" />
+      {/* 半球光 - 更亮的顶光+地面反射 */}
+      <hemisphereLight intensity={1.0} color="#ffffff" groundColor="#b7bac7" />
 
-      {/* 主光源 */}
-      <directionalLight position={[10, 10, 5]} intensity={1.5} />
+      {/* 主光源 - 类似摄影棚主灯 */}
+      <directionalLight position={[8, 10, 6]} intensity={2.0} />
 
-      {/* 辅助光源 - 照亮暗部 */}
-      <directionalLight position={[-10, 5, -5]} intensity={0.5} color="#b0c4de" />
+      {/* 辅助光源 - 提亮车身暗部，避免一侧死黑 */}
+      <directionalLight position={[-6, 4, -4]} intensity={0.9} color="#c5d4ff" />
 
-      {/* 底部阴影 - 增加真实感 */}
-      <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={10} blur={2} far={4} />
-
-
-
+      {/* 地面与阴影 - 明亮的浅灰地面，阴影更柔和 */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.001, 0]}>
+        <planeGeometry args={[30, 30]} />
+        <meshStandardMaterial color="#f3f4fb" roughness={0.8} />
+      </mesh>
+      <ContactShadows position={[0, 0, 0]} opacity={0.3} scale={12} blur={3} far={6} color="#a1a6c0" />
       {/* 控制器 */}
       <OrbitControls
         enablePan={true}

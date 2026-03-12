@@ -14,14 +14,16 @@ function App() {
         algorithm: theme.darkAlgorithm,
         token: {
           colorPrimary: '#00d4ff',
-          colorBgContainer: 'rgba(13, 13, 26, 0.6)', // 毛玻璃背景
-          colorBgElevated: 'rgba(18, 18, 31, 0.8)',
+          // 整体略提亮一点，避免纯黑压抑
+          colorBgContainer: 'rgba(15, 18, 32, 0.75)',
+          colorBgElevated: 'rgba(21, 24, 40, 0.9)',
           borderRadius: 10,
           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
         },
         components: {
           Layout: {
-            bodyBg: '#050508',
+            // 页面主背景从近乎纯黑调整为稍微偏蓝的深色，提高层次感
+            bodyBg: '#080b16',
             headerBg: 'rgba(5, 5, 8, 0.8)',
           },
         },

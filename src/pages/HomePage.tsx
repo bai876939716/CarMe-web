@@ -68,7 +68,14 @@ export const HomePage = () => {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
 
   return (
-    <div style={{ background: '#050508', color: '#fff', overflowX: 'hidden' }}>
+    <div
+      style={{
+        // 整体从近乎纯黑调整为更亮的深蓝灰，提升卡片与背景的对比
+        background: 'radial-gradient(circle at 10% 0%, #20263a 0%, #070711 55%, #050508 100%)',
+        color: '#fff',
+        overflowX: 'hidden',
+      }}
+    >
       {/* ===== Hero Section ===== */}
       <section
         style={{
@@ -78,7 +85,9 @@ export const HomePage = () => {
           position: 'relative',
           overflow: 'hidden',
           padding: '80px 80px',
-          background: 'linear-gradient(135deg, #050508 0%, #07071a 60%, #050510 100%)',
+          // Hero 背景整体提亮，并加入更多蓝紫色调
+          background:
+            'linear-gradient(135deg, #101321 0%, #11152b 55%, #0b1024 100%)',
         }}
       >
         {/* Background glows */}
@@ -374,13 +383,18 @@ export const HomePage = () => {
               onMouseLeave={() => setHoveredWork(null)}
               style={{
                 background: work.gradient,
-                borderRadius: 16,
+                borderRadius: 18,
                 overflow: 'hidden',
                 cursor: 'pointer',
-                border: `1px solid ${hoveredWork === work.id ? 'rgba(0,212,255,0.2)' : 'rgba(255,255,255,0.05)'}`,
-                transition: 'all 0.3s',
-                transform: hoveredWork === work.id ? 'translateY(-4px)' : 'none',
-                boxShadow: hoveredWork === work.id ? '0 12px 40px rgba(0,0,0,0.4)' : 'none',
+                border: `1px solid ${
+                  hoveredWork === work.id ? 'rgba(0,212,255,0.55)' : 'rgba(255,255,255,0.14)'
+                }`,
+                transition: 'all 0.25s',
+                transform: hoveredWork === work.id ? 'translateY(-5px)' : 'none',
+                boxShadow:
+                  hoveredWork === work.id
+                    ? '0 18px 40px rgba(0,0,0,0.6)'
+                    : '0 10px 26px rgba(0,0,0,0.45)',
               }}
             >
               <div
@@ -418,7 +432,14 @@ export const HomePage = () => {
               </div>
               <div style={{ padding: '16px' }}>
                 <div
-                  style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 6, lineHeight: 1.3 }}
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: '#fff',
+                    marginBottom: 6,
+                    lineHeight: 1.3,
+                    textShadow: '0 1px 3px rgba(0,0,0,0.55)',
+                  }}
                 >
                   {work.title}
                 </div>
@@ -460,14 +481,15 @@ export const HomePage = () => {
               onClick={() => navigate('/community')}
               style={{
                 background: post.coverGradient,
-                borderRadius: 16,
+                borderRadius: 18,
                 overflow: 'hidden',
                 cursor: 'pointer',
-                border: '1px solid rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.14)',
                 minWidth: 270,
                 width: 270,
                 flexShrink: 0,
-                transition: 'transform 0.2s',
+                boxShadow: '0 10px 26px rgba(0,0,0,0.45)',
+                transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
               }}
             >
               <div
@@ -544,13 +566,19 @@ export const HomePage = () => {
               onMouseEnter={() => setHoveredProduct(product.id)}
               onMouseLeave={() => setHoveredProduct(null)}
               style={{
-                background: '#0d0d1a',
-                borderRadius: 16,
+                background: '#131626',
+                borderRadius: 18,
                 overflow: 'hidden',
                 cursor: 'pointer',
-                border: `1px solid ${hoveredProduct === product.id ? 'rgba(0,212,255,0.15)' : 'rgba(255,255,255,0.05)'}`,
-                transition: 'all 0.3s',
-                transform: hoveredProduct === product.id ? 'translateY(-3px)' : 'none',
+                border: `1px solid ${
+                  hoveredProduct === product.id ? 'rgba(0,212,255,0.55)' : 'rgba(255,255,255,0.14)'
+                }`,
+                boxShadow:
+                  hoveredProduct === product.id
+                    ? '0 18px 40px rgba(0,0,0,0.6)'
+                    : '0 10px 26px rgba(0,0,0,0.45)',
+                transition: 'all 0.25s',
+                transform: hoveredProduct === product.id ? 'translateY(-5px)' : 'none',
               }}
             >
               <div

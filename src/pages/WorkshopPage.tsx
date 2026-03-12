@@ -33,7 +33,9 @@ const CarSelectScreen = () => {
     <div
       style={{
         minHeight: 'calc(100vh - 64px)',
-        background: '#050508',
+        // 由纯黑改为顶部略亮的径向渐变，让内容更“浮起”
+        background:
+          'radial-gradient(circle at 20% 0%, #181c30 0%, #050508 65%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -235,10 +237,11 @@ const WorkshopSidebar = () => {
     <div
       style={{
         width: 288,
-        background: 'rgba(8, 8, 15, 0.65)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderRight: '1px solid rgba(255,255,255,0.08)',
+        // 侧边栏整体提亮并增强与背景的分离感
+        background: 'rgba(18, 24, 38, 0.95)',
+        backdropFilter: 'blur(22px)',
+        WebkitBackdropFilter: 'blur(22px)',
+        borderRight: '1px solid rgba(255,255,255,0.12)',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -250,7 +253,7 @@ const WorkshopSidebar = () => {
       <div
         style={{
           display: 'flex',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
           padding: '0 4px',
         }}
       >
@@ -265,7 +268,7 @@ const WorkshopSidebar = () => {
               borderBottom: `2px solid ${activeTab === tab.key ? '#00d4ff' : 'transparent'}`,
               padding: '14px 4px 12px',
               cursor: 'pointer',
-              color: activeTab === tab.key ? '#00d4ff' : 'rgba(255,255,255,0.4)',
+              color: activeTab === tab.key ? '#00d4ff' : 'rgba(255,255,255,0.65)',
               fontSize: 11,
               fontWeight: activeTab === tab.key ? 700 : 400,
               display: 'flex',
@@ -288,7 +291,7 @@ const WorkshopSidebar = () => {
             <div
               style={{
                 fontSize: 11,
-                color: 'rgba(255,255,255,0.3)',
+                  color: 'rgba(255,255,255,0.55)',
                 letterSpacing: 1,
                 textTransform: 'uppercase',
                 marginBottom: 14,
@@ -305,7 +308,7 @@ const WorkshopSidebar = () => {
                     background:
                       selectedWheel?.id === wheel.id
                         ? 'rgba(0,212,255,0.1)'
-                        : 'rgba(255,255,255,0.03)',
+                        : 'rgba(255,255,255,0.06)',
                     border: `1px solid ${
                       selectedWheel?.id === wheel.id
                         ? 'rgba(0,212,255,0.5)'
@@ -324,7 +327,7 @@ const WorkshopSidebar = () => {
                     style={{
                       width: 36,
                       height: 36,
-                      background: 'rgba(255,255,255,0.05)',
+                      background: 'rgba(255,255,255,0.12)',
                       borderRadius: 8,
                       display: 'flex',
                       alignItems: 'center',
@@ -339,8 +342,8 @@ const WorkshopSidebar = () => {
                     <div
                       style={{
                         fontSize: 13,
-                        fontWeight: 600,
-                        color: selectedWheel?.id === wheel.id ? '#00d4ff' : '#fff',
+                      fontWeight: 600,
+                      color: selectedWheel?.id === wheel.id ? '#00d4ff' : 'rgba(255,255,255,0.92)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -382,7 +385,7 @@ const WorkshopSidebar = () => {
             <div
               style={{
                 fontSize: 11,
-                color: 'rgba(255,255,255,0.3)',
+                color: 'rgba(255,255,255,0.55)',
                 letterSpacing: 1,
                 textTransform: 'uppercase',
                 marginBottom: 14,
@@ -435,7 +438,7 @@ const WorkshopSidebar = () => {
                 style={{
                   marginTop: 16,
                   padding: '10px 14px',
-                  background: 'rgba(255,255,255,0.04)',
+                  background: 'rgba(255,255,255,0.08)',
                   borderRadius: 8,
                   display: 'flex',
                   alignItems: 'center',
@@ -483,7 +486,7 @@ const WorkshopSidebar = () => {
       <div
         style={{
           padding: '16px',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
           display: 'flex',
           flexDirection: 'column',
           gap: 10,
@@ -509,8 +512,8 @@ const WorkshopSidebar = () => {
           <button
             style={{
               flex: 1,
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.16)',
               borderRadius: 10,
               padding: '10px',
               color: 'rgba(255,255,255,0.6)',
@@ -553,7 +556,9 @@ export const WorkshopPage = () => {
       style={{
         height: 'calc(100vh - 64px)',
         display: 'flex',
-        background: '#050508',
+        // 工坊主体背景也改为顶部略亮的渐变，方便与 3D 画布和侧边栏区分
+        background:
+          'radial-gradient(circle at 20% 0%, #171b2c 0%, #050508 65%)',
         overflow: 'hidden',
       }}
     >
