@@ -1,5 +1,22 @@
 // 类型定义
 
+/** 每个车型的 3D 模型调整配置（存于 model_config 字段，JSON 字符串） */
+export type ModelConfig = {
+  /** 整体缩放比，默认 1 */
+  scale?: number;
+  /** 绕 Y 轴旋转弧度，用于修正模型朝向，默认 0 */
+  rotationY?: number;
+  /** Y 轴位移，用于将车辆底部对齐地面，默认 0 */
+  positionY?: number;
+  /** 四轮挂点坐标 [x, y, z]（世界坐标） */
+  wheels?: {
+    FL?: [number, number, number];
+    FR?: [number, number, number];
+    RL?: [number, number, number];
+    RR?: [number, number, number];
+  };
+};
+
 /** 对应后端 CarModel 实体 */
 export type CarModel = {
   id: number;
@@ -12,6 +29,8 @@ export type CarModel = {
   coverGradient?: string;
   description?: string;
   isActive?: boolean;
+  /** 模型调整配置，JSON 字符串，解析为 ModelConfig */
+  modelConfig?: string;
 };
 
 /** 对应后端 Part 实体 */
