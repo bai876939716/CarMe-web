@@ -15,6 +15,8 @@ export type ModelConfig = {
     RL?: [number, number, number];
     RR?: [number, number, number];
   };
+  /** GLB 中需要隐藏的轮毂节点名列表（选中轮毂时隐藏，还原时取消隐藏） */
+  hideNodes?: string[];
 };
 
 /** 对应后端 CarModel 实体 */

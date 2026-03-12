@@ -8,7 +8,6 @@ interface CarModel3DProps {
   car: CarModel;
 }
 
-// 解析 modelConfig JSON 字符串，解析失败时返回空对象
 const parseModelConfig = (raw?: string): ModelConfig => {
   if (!raw) return {};
   try {
@@ -16,6 +15,23 @@ const parseModelConfig = (raw?: string): ModelConfig => {
   } catch {
     return {};
   }
+};
+
+type WheelStyle = { color: string; metalness: number; roughness: number };
+
+const WHEEL_PALETTE: WheelStyle[] = [
+  { color: '#E0E0E6', metalness: 0.95, roughness: 0.04 }, // 铬银
+  { color: '#FF2222', metalness: 0.25, roughness: 0.35 }, // 鲜红
+  { color: '#FFD700', metalness: 0.80, roughness: 0.08 }, // 亮金
+  { color: '#00AAFF', metalness: 0.30, roughness: 0.30 }, // 天蓝
+  { color: '#FF7700', metalness: 0.40, roughness: 0.25 }, // 橙铜
+  { color: '#22DD44', metalness: 0.30, roughness: 0.30 }, // 荧光绿
+  { color: '#CC44FF', metalness: 0.35, roughness: 0.30 }, // 紫色
+];
+
+const getWheelStyle = (wheel: Part | null): WheelStyle => {
+  if (!wheel) return { color: '#666666', metalness: 0.6, roughness: 0.4 };
+  return WHEEL_PALETTE[(wheel.id - 1) % WHEEL_PALETTE.length];
 };
 
 // 错误边界组件，用于捕获模型加载失败（如 404）
@@ -46,16 +62,17 @@ class ModelErrorBoundary extends React.Component<
 
 /**
  * 默认四轮挂点（基于占位盒车辆比例），当 modelConfig 未提供 wheels 时使用
+ * y 调整为 0.40，使默认占位轮毂半径加大后仍然落在地面上
  */
 const DEFAULT_WHEEL_SOCKETS: Array<{
   id: string;
   position: [number, number, number];
   isLeft: boolean;
 }> = [
-  { id: 'FL', position: [-0.95, 0.28,  1.4], isLeft: true  },
-  { id: 'FR', position: [ 0.95, 0.28,  1.4], isLeft: false },
-  { id: 'RL', position: [-0.95, 0.28, -1.4], isLeft: true  },
-  { id: 'RR', position: [ 0.95, 0.28, -1.4], isLeft: false },
+  { id: 'FL', position: [-0.95, 0.4, 1.4], isLeft: true },
+  { id: 'FR', position: [0.95, 0.4, 1.4], isLeft: false },
+  { id: 'RL', position: [-0.95, 0.4, -1.4], isLeft: true },
+  { id: 'RR', position: [0.95, 0.4, -1.4], isLeft: false },
 ];
 
 /** 将 ModelConfig.wheels 合并成统一格式供 WheelSet 使用 */
@@ -64,25 +81,36 @@ const buildWheelSockets = (
 ): typeof DEFAULT_WHEEL_SOCKETS => {
   if (!wheels) return DEFAULT_WHEEL_SOCKETS;
   return [
-    { id: 'FL', position: wheels.FL ?? [-0.95, 0.28,  1.4], isLeft: true  },
-    { id: 'FR', position: wheels.FR ?? [ 0.95, 0.28,  1.4], isLeft: false },
-    { id: 'RL', position: wheels.RL ?? [-0.95, 0.28, -1.4], isLeft: true  },
-    { id: 'RR', position: wheels.RR ?? [ 0.95, 0.28, -1.4], isLeft: false },
+    { id: 'FL', position: wheels.FL ?? [-0.95, 0.4, 1.4], isLeft: true },
+    { id: 'FR', position: wheels.FR ?? [0.95, 0.4, 1.4], isLeft: false },
+    { id: 'RL', position: wheels.RL ?? [-0.95, 0.4, -1.4], isLeft: true },
+    { id: 'RR', position: wheels.RR ?? [0.95, 0.4, -1.4], isLeft: false },
   ];
 };
 
-// 单个轮子的几何体占位（当无配件 GLB 时）
 const WheelGeo = ({
   position,
-  color = '#222222',
+  style,
 }: {
   position: [number, number, number];
-  color?: string;
+  style: WheelStyle;
 }) => (
-  <mesh position={position} rotation={[0, 0, Math.PI / 2]}>
-    <cylinderGeometry args={[0.3, 0.3, 0.22, 32]} />
-    <meshStandardMaterial color={color} metalness={0.85} roughness={0.2} />
-  </mesh>
+  <group position={position} rotation={[0, 0, Math.PI / 2]}>
+    {/* 外圈轮胎：更粗、更接近真实比例 */}
+    <mesh>
+      <cylinderGeometry args={[0.4, 0.4, 0.28, 64]} />
+      <meshStandardMaterial color="#1a1a1a" metalness={0.1} roughness={0.9} />
+    </mesh>
+    {/* 内圈轮毂盘：根据不同 Part 给不同的金属色 */}
+    <mesh>
+      <cylinderGeometry args={[0.28, 0.28, 0.3, 32]} />
+      <meshStandardMaterial
+        color={style.color}
+        metalness={style.metalness}
+        roughness={style.roughness}
+      />
+    </mesh>
+  </group>
 );
 
 // 单个 GLB 轮毂 —— 每个实例 clone，避免四轮共享同一对象
@@ -121,6 +149,7 @@ const WheelSet = ({
   const sockets = buildWheelSockets(customWheels);
   const isGlb =
     !!wheel?.partValue && wheel.partValue.toLowerCase().endsWith('.glb');
+  const style = getWheelStyle(wheel);
 
   return (
     <>
@@ -128,10 +157,10 @@ const WheelSet = ({
         isGlb ? (
           <ModelErrorBoundary
             key={`${id}-${wheel!.partValue}`}
-            fallback={<WheelGeo position={position} color="#333333" />}
+            fallback={<WheelGeo position={position} style={style} />}
           >
             <React.Suspense
-              fallback={<WheelGeo position={position} color="#333333" />}
+              fallback={<WheelGeo position={position} style={style} />}
             >
               <WheelGLTF
                 modelUrl={wheel!.partValue!}
@@ -141,11 +170,7 @@ const WheelSet = ({
             </React.Suspense>
           </ModelErrorBoundary>
         ) : (
-          <WheelGeo
-            key={id}
-            position={position}
-            color={wheel ? '#333333' : '#666666'}
-          />
+          <WheelGeo key={id} position={position} style={style} />
         )
       )}
     </>
@@ -182,24 +207,50 @@ const CarModelGLTF = ({ car }: { car: CarModel }) => {
 
   const { scene } = useGLTF(car.modelUrl || '/models/cars/placeholder.glb', true, true);
 
-  // 响应车漆颜色变化
+  // 按名称精确控制原 GLB 轮毂的可见性：
+  // 选中轮毂时隐藏原轮毂；未选中时恢复显示
   useEffect(() => {
     if (!scene) return;
+    const hideNodes = config.hideNodes ?? [];
+    if (hideNodes.length === 0) return;
+    const shouldHide = !!selectedWheel;
     scene.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        const mat = child.material as THREE.MeshStandardMaterial;
-        if (
-          mat?.name &&
-          (mat.name.toLowerCase().includes('paint') ||
-            mat.name.toLowerCase().includes('body'))
-        ) {
-          mat.color.set(selectedColor?.partValue || '#1890ff');
-          mat.metalness = 0.8;
-          mat.roughness = 0.2;
-          mat.needsUpdate = true;
-        }
+      if (hideNodes.includes(child.name)) {
+        child.visible = !shouldHide;
       }
     });
+  }, [scene, selectedWheel]);
+
+  // 车漆换色：优先匹配 paint/body 命名材质，若无则对所有不透明网格生效（兼容 Tripo）
+  useEffect(() => {
+    if (!scene || !selectedColor?.partValue) return;
+    const targetColor = selectedColor.partValue;
+    let paintFound = false;
+
+    scene.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) return;
+      const mat = child.material as THREE.MeshStandardMaterial;
+      if (!mat?.name) return;
+      const n = mat.name.toLowerCase();
+      if (n.includes('paint') || n.includes('body')) {
+        mat.color.set(targetColor);
+        mat.metalness = 0.8;
+        mat.roughness = 0.2;
+        mat.needsUpdate = true;
+        paintFound = true;
+      }
+    });
+
+    if (!paintFound) {
+      scene.traverse((child) => {
+        if (!(child instanceof THREE.Mesh)) return;
+        const mat = child.material as THREE.MeshStandardMaterial;
+        if (!mat) return;
+        if (mat.transparent && mat.opacity < 0.5) return;
+        mat.color.set(targetColor);
+        mat.needsUpdate = true;
+      });
+    }
   }, [scene, selectedColor]);
 
   return (
@@ -211,8 +262,8 @@ const CarModelGLTF = ({ car }: { car: CarModel }) => {
         rotation={[0, rotY, 0]}
         position={[0, posY, 0]}
       />
-      {/* 拼接四个轮毂，使用 modelConfig 中的挂点坐标 */}
-      <WheelSet wheel={selectedWheel} customWheels={config.wheels} />
+      {/* 选中轮毂配件时才渲染外挂轮毂，否则保留原 GLB 轮毂 */}
+      {selectedWheel && <WheelSet wheel={selectedWheel} customWheels={config.wheels} />}
     </group>
   );
 };
